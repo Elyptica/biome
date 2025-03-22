@@ -1092,6 +1092,10 @@ export interface A11y {
  */
 export interface Complexity {
 	/**
+	 * Disallow unclear usage of consecutive space characters in regular expression literals
+	 */
+	noAdjacentSpacesInRegex?: RuleFixConfiguration_for_Null;
+	/**
 	 * Disallow primitive type aliases and misleading types.
 	 */
 	noBannedTypes?: RuleFixConfiguration_for_Null;
@@ -1115,10 +1119,6 @@ export interface Complexity {
 	 * Prefer for...of statement instead of Array.forEach.
 	 */
 	noForEach?: RuleConfiguration_for_NoForEachOptions;
-	/**
-	 * Disallow unclear usage of consecutive space characters in regular expression literals
-	 */
-	noMultipleSpacesInRegex?: RuleFixConfiguration_for_Null;
 	/**
 	 * This rule reports when a class has no non-static members, such as for a class used exclusively as a static namespace.
 	 */
@@ -1317,6 +1317,10 @@ export interface Correctness {
 	 */
 	noPrecisionLoss?: RuleConfiguration_for_Null;
 	/**
+	 * Restricts imports of private exports.
+	 */
+	noPrivateImports?: RuleConfiguration_for_NoPrivateImportsOptions;
+	/**
 	 * Prevent the usage of the return value of React.render.
 	 */
 	noRenderReturnValue?: RuleConfiguration_for_Null;
@@ -1365,10 +1369,6 @@ export interface Correctness {
 	 */
 	noUnmatchableAnbSelector?: RuleConfiguration_for_Null;
 	/**
-	 * Avoid using unnecessary continue.
-	 */
-	noUnnecessaryContinue?: RuleFixConfiguration_for_Null;
-	/**
 	 * Disallow unreachable code
 	 */
 	noUnreachable?: RuleConfiguration_for_Null;
@@ -1403,7 +1403,11 @@ export interface Correctness {
 	/**
 	 * Disallow unused variables.
 	 */
-	noUnusedVariables?: RuleFixConfiguration_for_Null;
+	noUnusedVariables?: RuleFixConfiguration_for_NoUnusedVariablesOptions;
+	/**
+	 * Avoid using unnecessary continue.
+	 */
+	noUselessContinue?: RuleFixConfiguration_for_Null;
 	/**
 	 * This rules prevents void elements (AKA self-closing elements) from having children.
 	 */
@@ -1423,7 +1427,7 @@ export interface Correctness {
 	/**
 	 * Enforce all dependencies are correctly specified in a React hook.
 	 */
-	useExhaustiveDependencies?: RuleConfiguration_for_UseExhaustiveDependenciesOptions;
+	useExhaustiveDependencies?: RuleFixConfiguration_for_UseExhaustiveDependenciesOptions;
 	/**
 	 * Enforce that all React hooks are being called from the Top Level component functions.
 	 */
@@ -1494,13 +1498,13 @@ export interface Nursery {
 	 */
 	noDuplicateElseIf?: RuleConfiguration_for_Null;
 	/**
+	 * No duplicated fields in GraphQL operations.
+	 */
+	noDuplicateFields?: RuleConfiguration_for_Null;
+	/**
 	 * Disallow duplicate properties within declaration blocks.
 	 */
 	noDuplicateProperties?: RuleConfiguration_for_Null;
-	/**
-	 * No duplicated fields in GraphQL operations.
-	 */
-	noDuplicatedFields?: RuleConfiguration_for_Null;
 	/**
 	 * Disallow accessing namespace imports dynamically.
 	 */
@@ -1557,10 +1561,6 @@ export interface Nursery {
 	 * Disallow octal escape sequences in string literals
 	 */
 	noOctalEscape?: RuleFixConfiguration_for_Null;
-	/**
-	 * Restricts imports of "package private" exports.
-	 */
-	noPackagePrivateImports?: RuleConfiguration_for_Null;
 	/**
 	 * Disallow the use of process.env.
 	 */
@@ -2304,15 +2304,21 @@ export type RuleConfiguration_for_ComplexityOptions =
 export type RuleConfiguration_for_NoForEachOptions =
 	| RulePlainConfiguration
 	| RuleWithOptions_for_NoForEachOptions;
+export type RuleConfiguration_for_NoPrivateImportsOptions =
+	| RulePlainConfiguration
+	| RuleWithOptions_for_NoPrivateImportsOptions;
 export type RuleConfiguration_for_NoUndeclaredDependenciesOptions =
 	| RulePlainConfiguration
 	| RuleWithOptions_for_NoUndeclaredDependenciesOptions;
 export type RuleConfiguration_for_UndeclaredVariablesOptions =
 	| RulePlainConfiguration
 	| RuleWithOptions_for_UndeclaredVariablesOptions;
-export type RuleConfiguration_for_UseExhaustiveDependenciesOptions =
+export type RuleFixConfiguration_for_NoUnusedVariablesOptions =
 	| RulePlainConfiguration
-	| RuleWithOptions_for_UseExhaustiveDependenciesOptions;
+	| RuleWithFixOptions_for_NoUnusedVariablesOptions;
+export type RuleFixConfiguration_for_UseExhaustiveDependenciesOptions =
+	| RulePlainConfiguration
+	| RuleWithFixOptions_for_UseExhaustiveDependenciesOptions;
 export type RuleConfiguration_for_DeprecatedHooksOptions =
 	| RulePlainConfiguration
 	| RuleWithOptions_for_DeprecatedHooksOptions;
@@ -2457,6 +2463,16 @@ export interface RuleWithOptions_for_NoForEachOptions {
 	 */
 	options: NoForEachOptions;
 }
+export interface RuleWithOptions_for_NoPrivateImportsOptions {
+	/**
+	 * The severity of the emitted diagnostics by the rule
+	 */
+	level: RulePlainConfiguration;
+	/**
+	 * Rule's options
+	 */
+	options: NoPrivateImportsOptions;
+}
 export interface RuleWithOptions_for_NoUndeclaredDependenciesOptions {
 	/**
 	 * The severity of the emitted diagnostics by the rule
@@ -2477,7 +2493,25 @@ export interface RuleWithOptions_for_UndeclaredVariablesOptions {
 	 */
 	options: UndeclaredVariablesOptions;
 }
-export interface RuleWithOptions_for_UseExhaustiveDependenciesOptions {
+export interface RuleWithFixOptions_for_NoUnusedVariablesOptions {
+	/**
+	 * The kind of the code actions emitted by the rule
+	 */
+	fix?: FixKind;
+	/**
+	 * The severity of the emitted diagnostics by the rule
+	 */
+	level: RulePlainConfiguration;
+	/**
+	 * Rule's options
+	 */
+	options: NoUnusedVariablesOptions;
+}
+export interface RuleWithFixOptions_for_UseExhaustiveDependenciesOptions {
+	/**
+	 * The kind of the code actions emitted by the rule
+	 */
+	fix?: FixKind;
 	/**
 	 * The severity of the emitted diagnostics by the rule
 	 */
@@ -2754,6 +2788,17 @@ export interface NoForEachOptions {
 	allowedIdentifiers: string[];
 }
 /**
+ * Options for the rule `noPrivateImports`.
+ */
+export interface NoPrivateImportsOptions {
+	/**
+	* The default visibility to assume for symbols without visibility tag.
+
+Default: **public**. 
+	 */
+	defaultVisibility?: Visibility;
+}
+/**
  * Rule's options
  */
 export interface NoUndeclaredDependenciesOptions {
@@ -2775,6 +2820,12 @@ export interface UndeclaredVariablesOptions {
 	 * Check undeclared types.
 	 */
 	checkTypes?: boolean;
+}
+export interface NoUnusedVariablesOptions {
+	/**
+	 * Whether to ignore unused variables from an object destructuring with a spread (i.e.: whether `a` and `b` in `const { a, b, ...rest } = obj` should be ignored by this rule).
+	 */
+	ignoreRestSiblings?: boolean;
 }
 /**
  * Options for the rule `useExhaustiveDependencies`
@@ -2952,6 +3003,7 @@ export type PredefinedImportGroup =
 	| ":bun:"
 	| ":node:"
 	| ":types:";
+export type Visibility = "public" | "package" | "private";
 export type DependencyAvailability = boolean | string[];
 export interface Hook {
 	/**
@@ -3162,7 +3214,7 @@ export type Category =
 	| "lint/complexity/noExcessiveNestedTestSuites"
 	| "lint/complexity/noExtraBooleanCast"
 	| "lint/complexity/noForEach"
-	| "lint/complexity/noMultipleSpacesInRegex"
+	| "lint/complexity/noAdjacentSpacesInRegex"
 	| "lint/complexity/noStaticOnlyClass"
 	| "lint/complexity/noThisInStatic"
 	| "lint/complexity/noUselessCatch"
@@ -3210,6 +3262,7 @@ export type Category =
 	| "lint/correctness/noNodejsModules"
 	| "lint/correctness/noNonoctalDecimalEscape"
 	| "lint/correctness/noPrecisionLoss"
+	| "lint/correctness/noPrivateImports"
 	| "lint/correctness/noRenderReturnValue"
 	| "lint/correctness/noSelfAssign"
 	| "lint/correctness/noSetterReturn"
@@ -3222,7 +3275,7 @@ export type Category =
 	| "lint/correctness/noUnknownProperty"
 	| "lint/correctness/noUnknownUnit"
 	| "lint/correctness/noUnmatchableAnbSelector"
-	| "lint/correctness/noUnnecessaryContinue"
+	| "lint/correctness/noUselessContinue"
 	| "lint/correctness/noUnreachable"
 	| "lint/correctness/noUnreachableSuper"
 	| "lint/correctness/noUnsafeFinally"
@@ -3258,7 +3311,7 @@ export type Category =
 	| "lint/nursery/noDuplicateCustomProperties"
 	| "lint/nursery/noDuplicateElseIf"
 	| "lint/nursery/noDuplicateProperties"
-	| "lint/nursery/noDuplicatedFields"
+	| "lint/nursery/noDuplicateFields"
 	| "lint/nursery/noDynamicNamespaceImportAccess"
 	| "lint/nursery/noEnum"
 	| "lint/nursery/noExportedImports"
@@ -3278,7 +3331,6 @@ export type Category =
 	| "lint/nursery/noNestedTernary"
 	| "lint/nursery/noNoninteractiveElementInteractions"
 	| "lint/nursery/noOctalEscape"
-	| "lint/nursery/noPackagePrivateImports"
 	| "lint/nursery/noProcessEnv"
 	| "lint/nursery/noProcessGlobal"
 	| "lint/nursery/noReactSpecificProps"
